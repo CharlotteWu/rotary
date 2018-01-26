@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="content">
+    <div class="box">
+        <div class="bar">
+            <p class="title">轮盘设置</p>
+            <p class="close">x</p>
+        </div>
+
+        <div class="display-area">
+            <div class="rotary">
+                <ul>
+                    <li v-for="(item,index) in items" @click="getIndex(index)" @dblclick="remove(index)" :class="{ 'active':index === selected }" class="sector">
+                        <p class="item">{{item.prize}}</br>{{item.description}}</p>
+                    </li>
+                </ul>
+            </div>
+            <div id="rotary-tooltip" :class="{tooltip: rotaryFull}">{{rotaryWarn}}</div>
+
+        </div>
+
+        <div class="edit-area">
+            <div class="tabs">
+                <p v-for="(tab,index) in tabs" @click="getTabsIndex(index)" class="tab" :class="{'isActive':index === current}">{{tab}}</p>
+            </div>
+
+            <div class="edit-detail">
+                <div class="basic area">
+                    <p><span class="area-content-title">开始时间：</span><span class="area-content">从<input type="date" id="startDate" v-model="startDate" :class="{dateWarn:startVal}"></span></p>
+                    <p><span class="area-content-title">结束时间：</span><span class="area-content">到<input type="date" id="endDate" v-model="endDate" :class="{dateWarn:endVal}"></span></p>
+                    <p><span class="area-content-title">总抽奖次数：</span>
+                        <span class="area-content">
+                            <select>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </span>
+                    </p>
+                    <p><span class="area-content-title">强制关注：</span>
+                        <span class="area-content">
+                            <input type="radio" name="force" value="yes" v-model="picked">
+                            <label for="yes">是</label>
+
+                            <input type="radio" name="force" value="no" v-model="picked">
+                            <label for="no">否</label>
+                        </span>
+                    </p>
+
+                    <div id="force-watch" :class="{'forceClose':picked === 'no'}">
+                        <p><span class="area-content-title">二维码图片：</span><span class="area-content"><input class="file" type="file" accept="image/*" @change="fileChange($event)" @mouseup="initFileStatus"></span><span id="file-tooltip" :class="{tooltip:fileOversize}">{{fileWarn}}</span></p>
+                        <p><span class="area-content-title">文字说明：</span><span class="area-content"><input type="text" placeholder="关注公众号赶快参加活动吧"></span></p>
+                    </div>
+                </div>
+
+                <div class="carousel area">
+                    <p><span class="area-content-title">添加瓣数：</span><span class="area-content"><input type="button" id="addContent" @click="insert" value="加瓣"></span></p>
+                    <p><span class="area-content-title">转盘样式：</span>
+                        <span class="area-content">
+                            <select>
+                                <option value="orange">orange</option>
+                                <option value="orange">orange</option>
+                            </select>
+                        </span>
+                    </p>
+
+                    <div class="flapSetup">
+                        <p><span class="area-content-title">瓣数内容：</span><span class="area-content"><input :class="{rotaryContent:rotaryLengthFull}" placeholder="输入内容" v-model="items[selected].description" @keyup="watchInputLength($event)"></span><span id="rotaryContent-tooltip" :class="{tooltip:rotaryLengthFull}">{{rotaryContentWarn}}</span></p>
+                        <p><span class="area-content-title">奖项等级：</span>
+                            <span class="area-content">
+                            <select v-model="items[selected].prize">
+                                <option value="一等奖">一等奖</option>
+                                <option value="二等奖">二等奖</option>
+                                <option value="三等奖">三等奖</option>
+                            </select>
+                        </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="odd area">
+                    <odd v-for="(odd,index) in odds" :award="odd.award" v-model="odds[index].odd"></odd>
+                    <p>当前概率剩下：<span class="warn" id="total">{{total}}%</span></p>
+                    <p class="warn">＊概率数不能大于100，否则自动清零</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit" @click="checkStatus">提交</div>
+    </div>
+
+    <div class="instruction">
+        <h2>说明</h2>
+        <h3>基本设置</h3>
+        <p>• 设置转盘的基本信息：</br>1、在强制是否关注时切换会将关注遮罩层的图片和文字说明显示，否时会关闭，减少用户的负担；</br>2、上传图片都需限制图片大小，否则提醒用户超出大小。</p>
+        <h3>瓣内容设置</h3>
+        <p>• 设置瓣内容：</br>1、点击任意一块瓣即可编辑文字、奖项；</br>2、双击瓣即删除，减少误删；</br>3、超过最高和最低瓣时会提示用户已达上／下限。</p>
+        <h3>概率设置</h3>
+        <p>• 设置概率：</br>1、方便用户控制相对应奖项的获奖概率，在下方提示用户未设置的概率数；</br>2、并对于输入的内容做了相对应的限制：只能输入数字，超过100自动清零，累加的概率超过100提示用户修改。</p>
+
+    </div>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/vue/2.5.12/vue.min.js"></script>
+<script src="currency-validator.js"></script>
+<script src="script.js"></script>
+</html>

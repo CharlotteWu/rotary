@@ -32,8 +32,8 @@
 
             <div class="edit-detail">
                 <div class="basic area">
-                    <p><span class="area-content-title">开始时间：</span><span class="area-content">从<input type="date" id="startDate" v-model="startDate" :class="{dateWarn:startVal}"></span></p>
-                    <p><span class="area-content-title">结束时间：</span><span class="area-content">到<input type="date" id="endDate" v-model="endDate" :class="{dateWarn:endVal}"></span></p>
+                    <p><span class="area-content-title">开始时间：</span><span class="area-content">从<input type="date" id="startDate" v-model="startDate" :class="{dateWarn:startVal}"></span><span id="start-tooltip" :class="{tooltip:startVal}">{{startDateWarn}}</span></p>
+                    <p><span class="area-content-title">结束时间：</span><span class="area-content">到<input type="date" id="endDate" v-model="endDate" :class="{dateWarn:endVal}"></span><span id="end-tooltip" :class="{tooltip:endVal}">{{endDateWarn}}</span></p>
                     <p><span class="area-content-title">总抽奖次数：</span>
                         <span class="area-content">
                             <select>
@@ -56,8 +56,8 @@
                     </p>
 
                     <div id="force-watch" :class="{'forceClose':picked === 'no'}">
-                        <p><span class="area-content-title">二维码图片：</span><span class="area-content"><input class="file" type="file" accept="image/*" @change="fileChange($event)" @mouseup="initFileStatus"></span><span id="file-tooltip" :class="{tooltip:fileOversize}">{{fileWarn}}</span></p>
-                        <p><span class="area-content-title">文字说明：</span><span class="area-content"><input type="text" placeholder="关注公众号赶快参加活动吧"></span></p>
+                        <p><span class="area-content-title">二维码图片：</span><span class="area-content"><input id="file" type="file" accept="image/*" @change="fileChange($event)" @mouseup="initFileStatus"></span><span id="file-tooltip" :class="{tooltip:fileOversize}">{{fileWarn}}</span></p>
+                        <p><span class="area-content-title">文字说明：</span><span class="area-content"><input type="text" id="focus" placeholder="关注公众号赶快参加活动吧" :class="{focusContent:focusContentLength}" @keyup="watchFocusLength($event)"></span><span id="focusContent-tooltip" :class="{tooltip:focusContentLength}">{{focusContentLengthWarn}}</span></p>
                     </div>
                 </div>
 
@@ -109,7 +109,7 @@
     </div>
 </div>
 </body>
-<script src="https://cdn.bootcss.com/vue/2.5.12/vue.min.js"></script>
+<script src="vue.min.js"></script>
 <script src="currency-validator.js"></script>
 <script src="script.js"></script>
 </html>

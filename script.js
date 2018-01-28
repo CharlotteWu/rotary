@@ -73,16 +73,20 @@ new Vue({
         odds:[],//设置概率的数组
         initTotal:100,//初始化总概率
         rotaryFull:false,//轮盘错误提示
-        rotaryWarn:'',//轮盘错误提示内容
+        rotaryWarn:'',//轮盘错误警告内容
         fileOversize:false,//文件超出提示
-        fileWarn:'',//文件超出提示内容
+        fileWarn:'',//文件超出警告内容
         alreadyShowRotary:false,//已经展示轮盘提示标志
         rotaryLengthFull:false,//长度未满
         rotaryContentWarn:'',//轮盘错误提示内容
+        focusContentLength:false,//关注说明文字标志
+        focusContentLengthWarn:'',//关注说明文字警告
         startVal:false,//开始日期标志
         endVal:false,//结束日期标志
         startDate:'',//开始日期
         endDate:'',//结束日期
+        startDateWarn:'',//开始日期警告
+        endDateWarn:'',//结束日期警告
     },
     methods:{
         getIndex:function (index) {
@@ -94,6 +98,10 @@ new Vue({
             if(this.items[this.selected].description.length > 4){
                 this.rotaryLengthFull = true;
                 this.rotaryContentWarn = '内容不能超过4个字';
+            }
+            if(this.items[this.selected].description.length == 0){
+                this.rotaryLengthFull = true;
+                this.rotaryContentWarn = '内容不能为空';
             }
 
             //复原rotary界限条件（过多或过少）
@@ -118,21 +126,19 @@ new Vue({
         remove:function (index) {
             //在此之前已经为3瓣
             //在disabled存在的情况下清空
-                if(this.rotaryFull === false){
-                    var addContent = document.getElementById('addContent');
-                    if(addContent.getAttribute('disabled') != ''){
-                        addContent.removeAttribute('disabled');
-                    }
-                    if(this.items.length == 3){
-                        this.rotaryFull = true;
-                        this.rotaryWarn = '轮盘瓣不能少于3瓣';
-                    }else{
-                        this.rotaryFull = false;
-                        this.items.splice(index,1);
-                    }
+            if(this.rotaryFull === false){
+                var addContent = document.getElementById('addContent');
+                if(addContent.getAttribute('disabled') != ''){
+                    addContent.removeAttribute('disabled');
                 }
-
-
+                if(this.items.length == 3){
+                    this.rotaryFull = true;
+                    this.rotaryWarn = '轮盘瓣不能少于3瓣';
+                }else{
+                    this.rotaryFull = false;
+                    this.items.splice(index,1);
+                }
+            }
         },
         getTabsIndex:function (index) {
             this.current = index;
@@ -206,25 +212,57 @@ new Vue({
                 this.rotaryLengthFull = true;
                 this.rotaryContentWarn = '内容不能超过4个字';
             }
+            if(t.value.length == 0){
+                this.rotaryLengthFull = true;
+                this.rotaryContentWarn = '内容不能为空';
+            }
+        },
+        watchFocusLength:function (t) {
+            var t = event.currentTarget;
+            this.focusContentLength = false;
+            this.focusContentLengthWarn = '';
+
+            if(t.value.length > 10){
+                this.focusContentLength = true;
+                this.focusContentLengthWarn = '内容不能超过10个字';
+            }
+            if(t.value.length == 0){
+                this.focusContentLength = true;
+                this.focusContentLengthWarn = '内容不能为空';
+            }
         },
         checkStatus:function () {
              var status = '';
              if(this.total != 0){
                  status += '概率尚未分配完毕;'
              }
-             if(this.rotaryLengthFull == true){
-                 status += '有瓣的内容过长;';
+             for(var e=0;e<this.items.length;e++){
+                 if(this.items[e].description.length == 0 ||this.items[e].description.length >4){
+                     status += '轮盘有内容违规;';
+                     break;
+                 }
              }
-             if(document.getElementById('startDate').value == ''){
-                 status += '无开始日期;';
-                 this.startVal = true;
-             }
-            if(document.getElementById('endDate').value == ''){
-                status += '无结束日期;';
-                this.endVal = true;
+
+            if(this.startDate == ''){
+                this.startVal = true;
+                this.startDateWarn = '开始日期不能为空';
             }
-            status += '请重新设置。';
-             alert(status);
+            if(this.endDate == ''){
+                this.endVal = true;
+                this.endDateWarn = '结束日期不能为空';
+            }
+            if(this.picked == 'yes'){
+                if(document.getElementById('file').value == ''){
+                    this.fileOversize = true;
+                    this.fileWarn = '图片不能为空';
+                }
+                if(this.focusContentLength == true || document.getElementById('focus').value.length == 0){
+                    this.focusContentLength = true;
+                    this.focusContentLengthWarn = '关注公众号说明内容不符合规格';
+                }
+            }
+
+             alert(status+',请重新填写。');
         }
 
     },
@@ -253,6 +291,7 @@ new Vue({
         'startDate':function (val) {
             if(val == ''){
                 this.startVal = true;
+                this.startDateWarn = '开始日期不能为空';
             }else{
                 this.startVal = false;
             }
@@ -260,6 +299,7 @@ new Vue({
         'endDate':function (val) {
             if(val == ''){
                 this.endVal = true;
+                this.endDateWarn = '结束日期不能为空';
             }else{
                 this.endVal = false;
             }

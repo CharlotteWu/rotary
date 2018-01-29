@@ -202,6 +202,9 @@ input[type="button"]:disabled{
     padding: 2px 4px;
     border-radius: 4px;
     font-size: 8px;
+}
+
+.tooltipAnimation{
     animation: tooltipShow 2s ;
     animation-fill-mode: forwards;
 }
@@ -236,8 +239,13 @@ input[type="button"]:disabled{
 }
 
 #focusContent-tooltip{
-    right: -112px;
+    width: 100px;
+    right: -68px;
     top: 0;
+}
+
+#focus{
+    width: 150px;
 }
 
 #start-tooltip,#end-tooltip{
@@ -251,21 +259,21 @@ input[type="button"]:disabled{
 }
 
 @keyframes tooltipShow {
-    0%{
-        opacity: 1;
-    }90%{
-        opacity: 1;
-    }100%{
-        opacity: 0;
-    }
+0%{
+    opacity: 1;
+}90%{
+    opacity: 1;
+}100%{
+    opacity: 0;
+}
 }
 
 .rotaryContent,.dateWarn,.focusContent{
-    border:1px solid red;
+border:1px solid red;
 }
 
 select{
-    border: 1px solid #E5E5E5;
-    background: #ffffff;
-    width: 80px;
+border: 1px solid #E5E5E5;
+background: #ffffff;
+width: 80px;
 }

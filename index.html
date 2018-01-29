@@ -21,7 +21,7 @@
                     </li>
                 </ul>
             </div>
-            <div id="rotary-tooltip" :class="{tooltip: rotaryFull}">{{rotaryWarn}}</div>
+            <div id="rotary-tooltip" :class="{tooltip: rotaryFull,tooltipAnimation:rotaryFull}">{{rotaryWarn}}</div>
 
         </div>
 
@@ -73,7 +73,7 @@
                     </p>
 
                     <div class="flapSetup">
-                        <p><span class="area-content-title">瓣数内容：</span><span class="area-content"><input :class="{rotaryContent:rotaryLengthFull}" placeholder="输入内容" v-model="items[selected].description" @keyup="watchInputLength($event)"></span><span id="rotaryContent-tooltip" :class="{tooltip:rotaryLengthFull}">{{rotaryContentWarn}}</span></p>
+                        <p><span class="area-content-title">瓣内容：</span><span class="area-content"><input :class="{rotaryContent:rotaryLengthFull}" placeholder="输入内容" v-model="items[selected].description" @keyup="watchInputLength($event)"></span><span id="rotaryContent-tooltip" :class="{tooltip:rotaryLengthFull}">{{rotaryContentWarn}}</span></p>
                         <p><span class="area-content-title">奖项等级：</span>
                             <span class="area-content">
                             <select v-model="items[selected].prize">

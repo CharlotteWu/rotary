@@ -232,17 +232,9 @@ new Vue({
             }
         },
         checkStatus:function () {
-             var status = '';
-             if(this.total != 0){
-                 status += '概率尚未分配完毕;'
-             }
-             for(var e=0;e<this.items.length;e++){
-                 if(this.items[e].description.length == 0 ||this.items[e].description.length >4){
-                     status += '轮盘有内容违规;';
-                     break;
-                 }
-             }
+            var status = '';
 
+            //基础设置
             if(this.startDate == ''){
                 this.startVal = true;
                 this.startDateWarn = '开始日期不能为空';
@@ -261,8 +253,23 @@ new Vue({
                     this.focusContentLengthWarn = '关注公众号说明内容不符合规格';
                 }
             }
+            if(this.startVal == true || this.endVal == true || this.fileOversize == true || this.focusContentLength == true){
+                status += '基础设置内容违规;';
+            }
+             //轮盘瓣
+            for(var e=0;e<this.items.length;e++){
+                if(this.items[e].description.length == 0 ||this.items[e].description.length >4){
+                    status += '轮盘有内容违规;';
+                    break;
+                }
+            }
+            //概率
+            if(this.total != 0){
+                status += '概率尚未分配完毕;'
+            }
 
-             alert(status+',请重新填写。');
+            //总输出
+            alert(status+'请重新填写。');
         }
 
     },
@@ -294,6 +301,7 @@ new Vue({
                 this.startDateWarn = '开始日期不能为空';
             }else{
                 this.startVal = false;
+                this.startDateWarn = '';
             }
         },
         'endDate':function (val) {
@@ -302,6 +310,7 @@ new Vue({
                 this.endDateWarn = '结束日期不能为空';
             }else{
                 this.endVal = false;
+                this.endDateWarn = '';
             }
         },
     }

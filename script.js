@@ -248,9 +248,12 @@ new Vue({
                     this.fileOversize = true;
                     this.fileWarn = '图片不能为空';
                 }
-                if(this.focusContentLength == true || document.getElementById('focus').value.length == 0){
+                if(this.focusContentLength == true){
                     this.focusContentLength = true;
-                    this.focusContentLengthWarn = '关注公众号说明内容不符合规格';
+                    this.focusContentLengthWarn = '关注公众号说明内容过长';
+                }else if(document.getElementById('focus').value.length == 0){
+                    this.focusContentLength = true;
+                    this.focusContentLengthWarn = '关注公众号说明内容不能为空';
                 }
             }
             if(this.startVal == true || this.endVal == true || this.fileOversize == true || this.focusContentLength == true){
@@ -269,7 +272,11 @@ new Vue({
             }
 
             //总输出
-            alert(status+'请重新填写。');
+            if(status != ''){
+                alert(status+'请重新填写。');
+            }else{
+                alert('提交成功。');
+            }
         }
 
     },
